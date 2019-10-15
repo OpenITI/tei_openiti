@@ -2,6 +2,8 @@
 
 This repository contains a TEI customization and schema for representing OpenITI mARkdown documents in TEI XML.
 
+## [Read the Customization documentation](https://openiti.github.io/tei_openiti/tei_openiti.html)
+
 ## The ODD
 
 `tei_openiti.odd` is the main customization file that includes both prose documentation and the code for generating an schema for validating XML documents.
@@ -14,7 +16,7 @@ Use the TEI customization website called "Roma". Find the newest version at [rom
 ### With OxGarage
 OxGarage offers both a web UI and an API to perform TEI transformation tasks. Find it at [oxgarage.tei-c.org](oxgarage.tei-c.org).
 
-### With the TEI Stylesheets
+### With the [TEI Stylesheets](https://github.com/teic/stylesheets)
 
 For the schema
 ```
