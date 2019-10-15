@@ -1,6 +1,6 @@
 # tei_openiti
 
-This repository contains a TEI customization for representing the OpenITI mARkdown scheme in TEI XML.
+This repository contains a TEI customization and schema for representing OpenITI mARkdown documents in TEI XML.
 
 ## The ODD
 
@@ -9,10 +9,10 @@ This repository contains a TEI customization for representing the OpenITI mARkdo
 ## How to generate the schema and the documentation
 
 ### With Roma
-Use the TEI customization website called "Roma". Find the newest version at romabeta.tei-c.org or the legacy version at roma.tei-c.org.
+Use the TEI customization website called "Roma". Find the newest version at [romabeta.tei-c.org](https://romabeta.tei-c.org) or the legacy version at [roma.tei-c.org](https://roma.tei-c.org).
 
 ### With OxGarage
-OxGarage offers both a web UI and an API to perform TEI transformation tasks. Find it at oxgarage.tei-c.org.
+OxGarage offers both a web UI and an API to perform TEI transformation tasks. Find it at [oxgarage.tei-c.org](oxgarage.tei-c.org).
 
 ### With the TEI Stylesheets
 
@@ -21,5 +21,6 @@ For the schema
 $ bin/teitorelaxng tei_openiti.odd tei_openiti.rng
 ```
 For the documentation
+```
 $ bin/teitohtml tei_openiti.odd
-
+```
