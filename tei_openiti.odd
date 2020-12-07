@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://vault.tei-c.org/P5/current/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://vault.tei-c.org/P5/current/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <TEI xml:lang="en" xmlns="http://www.tei-c.org/ns/1.0"
   xmlns:rng="http://relaxng.org/ns/structure/1.0">
   <teiHeader>
@@ -29,6 +31,277 @@
           >https://github.com/OpenITI/mARkdown_scheme</ref>.</p>
       <p>The following sections correspond to the mARkdown documentation and discuss how each
         feature is to be encoded in TEI.</p>
+      <div>
+        <head>Metadata</head>
+        <p>This section indicates how OpenITI metadata is encoded in TEI. 
+           OpenITI provides dedicated YAML metadata for authors, books, and specific versions of a text.
+           The YAML metadata description is available at: <ref target="https://github.com/OpenITI/Annotation/blob/master/templates_for_metadata/all_template.yml">
+          https://github.com/OpenITI/Annotation/blob/master/templates_for_metadata/all_template.yml</ref>           
+        </p>
+        <p>This metadata needs to be re-integrated with the TEI version of each mARkdown file, but 
+           it is best to avoid repetition. Metadata about authors (<gi>person</gi>) and books (<gi>bibl</gi>)
+           will be provided in separate TEI fragments to be XIncluded by the TEI version of each mARkdown file.</p>
+        <p>Information about text versions will be added to the TEI file together with file-specific metadata.</p>
+        
+        <p>To summarize, there are four types of metadata</p>
+        <list>
+          <item>Author Record, provided in a separate TEI fragment (<gi>listPerson</gi>)</item>
+          <item>Book Record (information about a work), provided in a separate TEI fragment (<gi>listBibl</gi>)</item>
+          <item>Version Record (information about a specific version of a work), provided in each TEI file</item>
+          <item>Non-Machine Readable File Metadata</item>
+        </list>
+        <p>Each TEI file will XInclude Author and Book records within a <gi>standOff</gi> element and link to them from relevant sections.</p>
+        <p>Author and book title metadata are duplicated in the <gi>titleStmt</gi> to better conform with a typical TEI header structure.
+        Both title and author will be linked to the respective metadata using <att>ref</att>.</p>
+        <p>Finally, the full bibliographical information will be linked from <gi>sourceDesc</gi>.</p>
+        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+          <teiHeader>
+            <fileDesc>
+              <titleStmt>
+                <title ref="#bibl">Sunan</title>
+                <author>
+                  <persName ref="#pers">IbnMansurKhurasani</persName>
+                </author>
+              </titleStmt>
+              <publicationStmt>
+                <p></p>
+              </publicationStmt>
+              <sourceDesc>
+                <bibl ref="#bibl"/>
+              </sourceDesc>
+            </fileDesc>
+            <!-- other File Metadata -->
+          </teiHeader>
+        </egXML>
+        <p>At the time of writing, the YML metadata is largely incomplete. When missing, <gi>titleStmt</gi> information can be
+        derived from the mARkdown filename instead, which is composed as of three parts separated by dots:
+        year followed by author name; book title; version id. For example <code>0227IbnMansurKhurasani.Sunan.JK001473-ara1</code> would result 
+        in the <gi>titleStmt</gi> shown above.</p>
+        <p>The following sections describe each set of metadata in detail.</p>  
+        <div>
+          <head>Author Record</head>
+          <p>The author of each document is encoded with <gi>person</gi> within a <gi>listPerson</gi> in <gi>standOff</gi>.</p>
+          <p>Authors are given an <att>xml:id</att> derived from the metadata field <code>00#AUTH#URI######</code>.</p>
+          <p>The author's name is encoded with <gi>persName</gi>, split into multiple components as follows:</p>
+          <list>            
+            <item><gi>name</gi> with <att>type</att> "ism", corresponding to <code>10#AUTH#ISM####LA</code> in the YAML;</item>
+            <item><gi>name</gi> with <att>type</att> "nasab", corresponding to <code>10#AUTH#NASAB####LA</code> in the YAML;</item>
+            <item><gi>name</gi> with <att>type</att> "kunya", corresponding to <code>10#AUTH#KUNYA####LA</code> in the YAML;</item>
+            <item><gi>name</gi> with <att>type</att> "laqab", corresponding to <code>10#AUTH#LAQAB####LA</code> in the YAML;</item>
+            <item><gi>name</gi> with <att>type</att> "nisba", corresponding to <code>10#AUTH#NISBA####LA</code> in the YAML;</item>
+            <item><gi>name</gi> with <att>type</att> "shuhra", corresponding to <code>10#AUTH#SHUHRA####LA</code> in the YAML;</item>
+          </list>
+          <p>For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <person xml:id="AH0227IbnMansurKhurasani">
+                <persName>
+                  <name type="ism">Fulān</name>
+                  <name role="kunya">Abū Fulān, Abū Fulānaŧ</name>
+                  <name type="laqab">Fulān al-dīn, Fulān al-dawlaŧ</name>
+                  <name type="nasab">b. Fulān b. Fulān b. Fulān b. Fulān</name>
+                  <name type="nisba">al-Fulānī, al-Fāʿil, al-Fulānī, al-Mufaʿʿil</name>
+                  <name type="shuhra">Ibn Fulān al-Fulānī</name>
+                </persName>
+              </person>              
+            </egXML>
+          </p>
+          <p>
+            Birth and death information is encoded with <gi>birth</gi> and <gi>death</gi> respectively.
+            The date is encoded as an attribute, the place, if known, is encoded via a reference to entries
+            in <ref target="https://althurayya.github.io/">Althurayya</ref> with <gi>place</gi>.
+          </p>
+          <p> For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <birth when="YEAR-MON_DA">
+                <placeName ref="URI"/>
+              </birth> 
+            </egXML>            
+            If the date or places are unknown, they will be omitted. The whole element is omitted when 
+            both are unknown.
+          </p>
+          <p>
+            OpenITI metadata may include information about places that the author visited. These
+            are encoded as events using <gi>listEvent</gi> and zero or more <gi>event</gi> elements
+            pointing to URIs in Althurayya.
+            For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <listEvent>
+                <event where="URI" />
+                <event where="URI" />
+              </listEvent>
+            </egXML>           
+          </p>
+          <p>
+            OpenITI metadata may include information about places that the author visited. These
+            are encoded as events using <gi>residence</gi> and zero or more <gi>placeName</gi> elements
+            pointing to URIs in Althurayya.
+            For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <residence>
+                <placeName ref="URI" />
+                <event ref="URI" />
+              </residence>
+            </egXML>
+          </p>
+          <p>
+            Bibliographical references to this person are listed in <gi>listBibl</gi> with <gi>bibl</gi>
+            elements referencing external resources.
+            For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <listBibl>
+                <bibl ref="URI" />
+              </listBibl>
+            </egXML>            
+          </p>
+          <p>
+            Finally, there may be a free-text comment about the author, which is econded with <gi>note</gi>. 
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <note> a free running comment here; you can add as many
+                lines as you see fit; the main goal of this comment section is to have a
+                place to record valuable information, which is difficult to formalize
+                into the above given categories.</note>
+            </egXML>  
+          </p>
+          <div>
+            <head>Author Relationships</head>
+            <p>
+              OpenITI metadata about authors may include relationships to teachers and students. 
+              In TEI, this is handled separately from the author's metadata with <gi>listRelation</gi>.
+              This element is located in <gi>listPerson</gi> and may contain information about multiple
+              relationships of the poeple named in the encoding.
+            </p>
+            <p>
+              Teacher and student relationship for authors are encoded using <gi>relation</gi>, where <att>name</att>
+              defines the type of relationship and <att>active</att> and <att>passive</att> describe the direction
+              of the relationship. Pointers will reference IDs of other people in the OpenITI corpus. For example:
+              <egXML xmlns="http://www.tei-c.org/ns/Examples">
+                <listRelation>
+                  <relation name="teacher" active="URI_TO_TEACHER" passive="#AUTHORID" />
+                  <relation name="student" active="#AUTHORID" passive="URI_TO_STUDENT" />
+                </listRelation>
+              </egXML>
+            </p>
+          </div>
+        </div>
+        <div>
+          <head>Book Record</head>
+          <p>Information about a book is encoded with <gi>bibl</gi> within a <gi>listBibl</gi> in <gi>standOff</gi>.</p>
+          <p>Books are given an <att>xml:id</att> derived from the metadata field <code>00#BOOK#URI######</code>.</p>
+          <p>Books can have more than one <gi>title</gi>. The first one, corresponding to <code>10#BOOK#TITLEA#AR</code>, will 
+            always get <att>type</att> "main"; the others will have <att>type</att> "alt".
+          </p>
+          <p>The same title may be provided in arabic script or transliterated in latin script. We use <att>xml:lang</att>
+            to mark the titles in arabic script. For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <bibl xml:id="AH0748Dhahabi.TarikhIslam">
+                <title type="main">Taʾrīḫ al-islām</title>
+                <title type="alt">Taʾrīḫ al-islām wa-Ṭabaqāt al-mašāhīr wa-l-aʿlām</title>
+                <title type="main" xml:lang="ar">تأريخ الإسلام</title>
+                <title type="alt" xml:lang="ar">تأريخ الإسلام وطبقات المشاهير والأعلام</title>
+              </bibl>
+            </egXML>
+          </p>
+          <p>Genre classification is relies on URIs to external taxonomies, which can be provided with <att>ana</att>
+          on the container <gi>bibl.</gi> For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <bibl ana="URI URI"/>
+            </egXML>          
+          </p>
+          <p>OpenITI metadata also identifies the location (<code>20#BOOK#WROTE####</code>) and date 
+          (<code>30#BOOK#WROTE##AH</code>) of writing. These are respresented with <gi>placeName</gi> and <gi>date</gi>
+          respectively. A <att>ref</att> can be provided on <gi>placeName</gi> to point to URIs in Althurayya.</p>
+          <p>There may be a list of related books in the corpus. These are encoded with <gi>relatedItem</gi> with 
+            a <att>target</att> pointing to book IDs in the corpus. The <att>type</att> attribute indicated
+            the type of relationship. For example:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <bibl xml:id="AH0748Dhahabi.TarikhIslam">
+                <relatedItem type="preceded" target="ID"/>
+                <relatedItem type="followed" target="ID"/>
+                <relatedItem type="abridged" target="ID"/>
+                <relatedItem type="commented" target="ID"/>
+              </bibl>
+            </egXML> 
+          </p>
+          <p>Related external resources are also encoded with <gi>relatedItem</gi> with <att>type</att> 
+            indicating the type or relationship.
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <bibl xml:id="AH0748Dhahabi.TarikhIslam">
+                <relatedItem type="editions" target="URI URI"/>
+                <relatedItem type="links" target="URI URI"/>
+                <relatedItem type="mss" target="URI URI"/>
+                <relatedItem type="studies" target="URI URI"/>
+                <relatedItem type="translations" target="URI URI"/>
+              </bibl>
+            </egXML>
+          </p>
+          <p>
+            Finally, there may be a free-text comment about the book, which is econded with <gi>note</gi>. 
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <note> a free running comment here; you can add as many
+                lines as you see fit; the main goal of this comment section is to have a
+                place to record valuable information, which is difficult to formalize
+                into the above given categories.</note>
+            </egXML>  
+          </p>
+        </div>
+        <div>
+          <head>Version Record</head>
+          <p>Information about a specific version of a text is encoded in the header of each TEI file.</p>
+          <p>The version URI is encoded with <gi>idno</gi> in the <gi>publicationStmt</gi></p>
+          <p>Character (<code>00#VERS#CLENGTH##</code>) and word (<code>00#VERS#LENGTH###</code>) 
+            length information is encoded in the <gi>fileDesc</gi> with appropriate measures:
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <fileDesc>
+                <extent>
+                  <measure unit="characters">188711</measure>
+                  <measure unit="words">48155</measure>
+                </extent>
+              </fileDesc>
+            </egXML> 
+          </p>          
+          <p>Information about the resource used for this version is encoded with <gi>bibl</gi> within <gi>sourceDesc</gi>.</p>
+          <p>OpenITI distinguishes between the source used as the base text (<code>80#VERS#BASED####</code>)
+            and a version used for collation (<code>80#VERS#COLLATED#</code>). They may be the same, but must be encoded
+            separately. Other related resources (<code>80#VERS#LINKS####</code>) are also encoded with <gi>bibl</gi>.
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <bibl type="based">
+                <ptr target="http://www.worldcat.org/oclc/72691742" />
+              </bibl>
+              <bibl type="collated">
+                <ptr target="http://www.worldcat.org/oclc/72691742" />
+              </bibl>
+              <bibl type="other">
+                <ptr target="https://archive.org/details/FP105731" />
+              </bibl>
+            </egXML>
+          </p>
+          <p>Information about the annotator are encoded in a <gi>respStmt</gi> within <gi>titleDesc</gi>. 
+            N.B. information about issues (<code>90#VERS#ISSUES###</code>) is left out from the TEI.
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <respStmt>
+                <resp>Annotator</resp>
+                <name>MAXIM G ROMANOV</name>
+                <date when="2018-05-29"/>
+              </respStmt>
+            </egXML>  
+          </p>
+          <p>
+            Finally, there may be a free-text comment about the book, which is econded with <gi>note</gi>. 
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <note>The electronic text is based on Baššār ʿAwwād Maʿrūf’s edition;
+                The quality of reproduction is very high, corresponding very closely to the
+                printed edition. The electronic file was initially prepared for Shamela by ...
+                who did a great job tagging the text structurally.</note>
+            </egXML>  
+          </p>
+        </div>
+        <div>
+          <head>Non-Machine Readable File Metadata</head>
+          <p>Each mARkdown file contains a metadata header that was derived from previous data formats. The mARkdown
+          Guidelines indicated that these metadata are not predicatbly machine readable. They are nonetheless included in the
+          TEI Header for preservation using the <gi>xenoData</gi> element.</p>
+        </div>
+      </div>
       <div>
         <head>Paragraphs and lines</head>
         <p>Paragraphs are encoded with <gi>p</gi> and line beginnings marked by <gi>lb</gi>.</p>
@@ -130,15 +403,15 @@
         </div>
         <div>
           <head>Years AH</head>
-          <p>These dates are encoded using <gi>date</gi> with required <att>calendar</att>,
-              <att>when-custom</att>, and <att>datingMethod</att>. The calendar is defined in the
+          <p>These dates are encoded using <gi>date</gi> with required <att>calendar</att>
+              and <att>when-custom</att>. The calendar is defined in the
             header using elements from 2.4.5 Calendar Description (see Guidelines); a
               <gi>calendarDesc</gi> must have the <att>xml:id</att> "ah" for Anno Hegirae, "in the
             year of the Hijra".</p>
           <p>The <att>type</att> attribute can be used to indicate whether the date is of "birth" or
             "death".</p>
           <egXML xmlns="http://www.tei-c.org/ns/Examples">
-            <date type="birth" when-custom="499" calendar="#ah" datingMethod="#ah"/>
+            <date type="birth" when-custom="499" calendar="#ah"/>
           </egXML>
           <p>Age is encoded with <gi>num</gi> with <att>type</att> set to "age".</p>
         </div>
@@ -313,11 +586,11 @@
                 <valList type="closed" mode="change">
                   <valItem mode="add" ident="nisbaŧs">
                     <desc versionDate="2019-09-07" xml:lang="en">A descriptive name "nisbaŧs".
-                      Equivalent to mARkdown's $DIC_NIS$.</desc>
+                      Equivalent to mARkdown's <code>$DIC_NIS$</code>.</desc>
                   </valItem>
                   <valItem mode="add" ident="nis">
                     <desc versionDate="2019-09-08" xml:lang="en">A descriptive name, or "nisbaŧs".
-                      Equivalent to mARkdown's $DIC_NIS$.</desc>
+                      Equivalent to mARkdown's <code>$DIC_NIS$</code>.</desc>
                   </valItem>
                 </valList>
               </attDef>
@@ -370,12 +643,12 @@
                   <valItem mode="add" ident="woman">
                     <desc versionDate="2019-09-10" xml:lang="en">With <att>type</att> "biography",
                       the biography of a woman. Corresponds to <code>### $$</code> or <code>###
-                        $BIO_REF$</code> [a biography of a woman].</desc>
+                        $BIO_WOM$</code> [a biography of a woman].</desc>
                   </valItem>
                   <valItem mode="add" ident="ref_or_rep">
                     <desc versionDate="2019-09-10" xml:lang="en">With <att>type</att> "biography", a
                       cross-reference to or repetition of another person's biography. Corresponds to
-                        <code>### $$$</code> or <code>### $BIO_WOM$</code> [a cross-reference and/or
+                        <code>### $$$</code> or <code>### $BIO_REF$</code> [a cross-reference and/or
                       repetition, for both men and women]</desc>
                   </valItem>
                   <valItem mode="add" ident="pos">
@@ -409,14 +682,6 @@
                 <datatype>
                   <dataRef key="teidata.count"/>
                 </datatype>
-              </attDef>
-              <attDef ident="datingMethod" mode="change" usage="req">
-                <valList type="closed" mode="change">
-                  <valItem mode="add" ident="#ah">
-                    <desc versionDate="2019-09-10" xml:lang="en">Anno Hegirae, "in the year of the
-                      Hijra"</desc>
-                  </valItem>
-                </valList>
               </attDef>
               <attDef ident="type" mode="change">
                 <desc versionDate="2019-09-10" xml:lang="en">characterizes the element in some
