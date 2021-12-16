@@ -323,10 +323,9 @@
       <div>
         <head>Verses of poetry</head>
         <p>Poetry lines are encoded with <gi>l</gi></p>
-        <p>Hemistichs are encoded within <gi>l</gi> using <gi>seg</gi> with <att>type</att> set to
-          "hemistich"</p>
+        <p>The separation between hemistichs are encoded as <emph>caesuras</emph> with a <gi>caesura</gi> element.</p>
         <egXML xmlns="http://www.tei-c.org/ns/Examples">
-          <l><seg type="hemistich">وإنما القرم من الأفيل</seg> قد يلحق الصغير بالجليل</l>
+          <l>وإنما القرم من الأفيل<caesura/> قد يلحق الصغير بالجليل</l>
         </egXML>
       </div>
       <div>
@@ -467,7 +466,7 @@
       </div>
       <div>
         <head>Riwāyāt units</head>
-        <p>These units are marked with <gi>p</gi> with <att>type</att> set to "rwy". Each unit may
+        <p>These units are marked with <gi>ab</gi> with <att>type</att> set to "rwy". Each unit may
           be organized in three parts, each encoded with <gi>seg</gi> with <att>type</att> set to
           "isn" for isnād, "matn", or "hukm" for ḥukm.</p>
       </div>
@@ -483,6 +482,7 @@
           <moduleRef key="tei"/>
           <moduleRef key="textstructure"
             except="div1 div2 div3 div4 div5 div6 div7 dateline docDate"/>
+          <moduleRef key="verse" include="caesura"/>
           <elementSpec ident="teiCorpus" mode="delete" module="core"/>
           <elementSpec ident="milestone" mode="change">
             <attList>
@@ -534,10 +534,6 @@
             <attList>
               <attDef ident="type" mode="change">
                 <valList type="closed" mode="change">
-                  <valItem mode="add" ident="hemistic">
-                    <desc versionDate="2019-09-02" xml:lang="en">A half verse. This value is to be
-                      used within <gi>l</gi></desc>
-                  </valItem>
                   <valItem mode="add" ident="prefix">
                     <desc versionDate="2019-09-10" xml:lang="en">A prefix in a named entity.
                       Determined based on the first digit of a mARkdown named entity.</desc>
