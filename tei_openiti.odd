@@ -692,6 +692,10 @@
                     <desc versionDate="2019-09-10" xml:lang="en">Date of death. Together with
                         <att>when-custom</att> corresponds to <code>YD####</code>.</desc>
                   </valItem>
+                  <valItem mode="add" ident="other">
+                    <desc versionDate="2021-12-17" xml:lang="en">Other date. Together with
+                        <att>when-custom</att> corresponds to <code>YY####</code>.</desc>
+                  </valItem>
                 </valList>
               </attDef>
             </attList>
