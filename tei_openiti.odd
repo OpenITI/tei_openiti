@@ -126,20 +126,18 @@
             For example:
             <egXML xmlns="http://www.tei-c.org/ns/Examples">
               <listEvent>
-                <event where="URI" />
-                <event where="URI" />
+                <event type="visit" where="URI" />
+                <event type="visit" where="URI" />
               </listEvent>
             </egXML>           
           </p>
           <p>
-            OpenITI metadata may include information about places that the author visited. These
-            are encoded as events using <gi>residence</gi> and zero or more <gi>placeName</gi> elements
-            pointing to URIs in Althurayya.
+            OpenITI metadata may include information about places where the author resided. These
+            are encoded as events using one or more <gi>residence</gi> elements for each URI in Althurayya with one <gi>placeName</gi> pointing to the URI.
             For example:
             <egXML xmlns="http://www.tei-c.org/ns/Examples">
               <residence>
                 <placeName ref="URI" />
-                <event ref="URI" />
               </residence>
             </egXML>
           </p>
@@ -838,6 +836,17 @@
                 <valList type="closed" mode="change">
                   <valItem mode="add" ident="rwy">
                     <desc versionDate="2019-09-15" xml:lang="en">A riwāyaŧ unit.</desc>
+                  </valItem>
+                </valList>
+              </attDef>
+            </attList>
+          </elementSpec>
+          <elementSpec ident="event" mode="change">
+            <attList>
+              <attDef ident="type" mode="change">
+                <valList type="closed" mode="change">
+                  <valItem mode="add" ident="visit">
+                    <desc versionDate="2022-07-22" xml:lang="en">An event representing a visit to a place indicated with a URI in <att>where</att></desc>
                   </valItem>
                 </valList>
               </attDef>
