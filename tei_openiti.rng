@@ -5,7 +5,7 @@
          xmlns="http://relaxng.org/ns/structure/1.0"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
          ns="http://www.tei-c.org/ns/1.0"><!--
-Schema generated from ODD source 2022-07-22T21:17:15Z. .
+Schema generated from ODD source 2022-08-03T17:40:50Z. .
 TEI Edition: Version 4.4.0. Last updated on
         19th April 2022, revision ff9cc28b0
 TEI Edition Location: https://www.tei-c.org/Vault/P5/Version 4.4.0/
@@ -3665,12 +3665,16 @@ Sample values include: 1] rubbing; 2] mildew; 3] smoke</a:documentation>
          <ref name="tei_att.typed.attribute.subtype"/>
          <optional>
             <attribute name="type">
-               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">characterizes the element in some sense, using any convenient classification scheme or typology.</a:documentation>
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">characterizes the element in some sense, using any convenient classification scheme or typology.
+Suggested values include: 1] nisbaŧs; 2] nis</a:documentation>
                <choice>
                   <value>nisbaŧs</value>
                   <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A descriptive name "nisbaŧs". Equivalent to mARkdown's `$DIC_NIS$`.</a:documentation>
                   <value>nis</value>
                   <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A descriptive name, or "nisbaŧs". Equivalent to mARkdown's `$DIC_NIS$`.</a:documentation>
+                  <data type="token">
+                     <param name="pattern">[^\p{C}\p{Z}]+</param>
+                  </data>
                </choice>
             </attribute>
          </optional>
@@ -3852,17 +3856,19 @@ Measures]</a:documentation>
          <ref name="tei_att.datable.custom.attribute.datingPoint"/>
          <ref name="tei_att.datable.custom.attribute.datingMethod"/>
          <ref name="tei_att.typed.attribute.subtype"/>
-         <attribute name="calendar">
-            <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">indicates one or more systems or calendars to which the date represented by the content of this element belongs.</a:documentation>
-            <list>
-               <oneOrMore>
-                  <choice>
-                     <value>#ah</value>
-                     <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Anno Hegirae, "in the year of the Hijra"</a:documentation>
-                  </choice>
-               </oneOrMore>
-            </list>
-         </attribute>
+         <optional>
+            <attribute name="calendar">
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">indicates one or more systems or calendars to which the date represented by the content of this element belongs.</a:documentation>
+               <list>
+                  <oneOrMore>
+                     <choice>
+                        <value>#ah</value>
+                        <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Anno Hegirae, "in the year of the Hijra"</a:documentation>
+                     </choice>
+                  </oneOrMore>
+               </list>
+            </attribute>
+         </optional>
          <pattern xmlns="http://purl.oclc.org/dsdl/schematron"
                   id="tei_openiti-date-calendar-calendar-constraint-rule-8">
             <sch:rule xmlns:sch="http://purl.oclc.org/dsdl/schematron"
@@ -3874,10 +3880,12 @@ Measures]</a:documentation>
               <sch:name/> element has no textual content.</sch:assert>
             </sch:rule>
          </pattern>
-         <attribute name="when-custom">
-            <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">supplies the value of a date or time in some custom standard form.</a:documentation>
-            <data type="nonNegativeInteger"/>
-         </attribute>
+         <optional>
+            <attribute name="when-custom">
+               <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">supplies the value of a date or time in some custom standard form.</a:documentation>
+               <data type="nonNegativeInteger"/>
+            </attribute>
+         </optional>
          <optional>
             <attribute name="type">
                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">characterizes the element in some sense, using any convenient classification scheme or typology. Lack of type with <code xmlns="http://www.w3.org/1999/xhtml">@when-custom</code> indicates `YY####`.</a:documentation>
@@ -9345,6 +9353,8 @@ Sample values include: 1] no; 2] yes; 3] weak; 4] strong</a:documentation>
    <start>
       <choice>
          <ref name="tei_TEI"/>
+         <ref name="tei_listPerson"/>
+         <ref name="tei_listBibl"/>
       </choice>
    </start>
 </grammar>

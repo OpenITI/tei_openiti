@@ -67,7 +67,7 @@
                 <p></p>
               </publicationStmt>
               <sourceDesc>
-                <bibl ref="#bibl"/>
+                <bibl><ptr target="#bibl"/></bibl>
               </sourceDesc>
             </fileDesc>
             <!-- other File Metadata -->
@@ -126,8 +126,8 @@
             For example:
             <egXML xmlns="http://www.tei-c.org/ns/Examples">
               <listEvent>
-                <event type="visit" where="URI" />
-                <event type="visit" where="URI" />
+                <event type="visit" where="URI"><p/></event>
+                <event type="visit" where="URI"><p/></event>
               </listEvent>
             </egXML>           
           </p>
@@ -147,7 +147,7 @@
             For example:
             <egXML xmlns="http://www.tei-c.org/ns/Examples">
               <listBibl>
-                <bibl ref="URI" />
+                <bibl><ptr target="URI"/></bibl>
               </listBibl>
             </egXML>            
           </p>
@@ -210,15 +210,22 @@
           respectively. A <att>ref</att> can be provided on <gi>placeName</gi> to point to URIs in Althurayya.</p>
           <p>There may be a list of related books in the corpus. These are encoded with <gi>relatedItem</gi> with 
             a <att>target</att> pointing to book IDs in the corpus. The <att>type</att> attribute indicated
-            the type of relationship. For example:
+            the type of relationship and <att>subtype</att> its subtype. For example:
             <egXML xmlns="http://www.tei-c.org/ns/Examples">
               <bibl xml:id="AH0748Dhahabi.TarikhIslam">
-                <relatedItem type="preceded" target="ID"/>
-                <relatedItem type="followed" target="ID"/>
-                <relatedItem type="abridged" target="ID"/>
-                <relatedItem type="commented" target="ID"/>
+                <relatedItem type="ABR" target="ID"/>
+                <relatedItem type="COMM" target="ID"/>
+                <relatedItem type="COMP" target="ID"/>
+                <relatedItem type="CONT" target="ID"/>
               </bibl>
             </egXML> 
+            There may be more than one types of relations for the same item, in which case a new <gi>relatedItem</gi> is added.
+            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+              <bibl xml:id="AH0748Dhahabi.TarikhIslam">
+                <relatedItem type="CONT" subtype="dhayl" target="#0379MuhammadRabci.TarikhMawlidCulama"/>
+                <relatedItem type="ABR" subtype="mukhtasar" target="#0379MuhammadRabci.TarikhMawlidCulama"/>
+              </bibl>
+            </egXML>
           </p>
           <p>Related external resources are also encoded with <gi>relatedItem</gi> with <att>type</att> 
             indicating the type or relationship.
@@ -284,12 +291,14 @@
             </egXML>  
           </p>
           <p>
-            Finally, there may be a free-text comment about the book, which is econded with <gi>note</gi>. 
+            Finally, there may be a free-text comment about the book, which is econded within <gi>encodingDesc</gi>. 
             <egXML xmlns="http://www.tei-c.org/ns/Examples">
-              <note>The electronic text is based on Baššār ʿAwwād Maʿrūf’s edition;
-                The quality of reproduction is very high, corresponding very closely to the
-                printed edition. The electronic file was initially prepared for Shamela by ...
-                who did a great job tagging the text structurally.</note>
+              <encodingDesc>
+                <p>The electronic text is based on Baššār ʿAwwād Maʿrūf’s edition;
+                  The quality of reproduction is very high, corresponding very closely to the
+                  printed edition. The electronic file was initially prepared for Shamela by ...
+                  who did a great job tagging the text structurally.</p>
+              </encodingDesc>
             </egXML>  
           </p>
         </div>
@@ -471,7 +480,7 @@
     </body>
     <back>
       <div>
-        <schemaSpec ident="tei_openiti" start="TEI" prefix="tei_" targetLang="en" docLang="en">
+        <schemaSpec ident="tei_openiti" start="TEI listPerson listBibl" prefix="tei_" targetLang="en" docLang="en">
           <moduleRef key="dictionaries" include="entryFree"/>
           <moduleRef key="namesdates" except="listObject object objectIdentifier objectName"/>
           <moduleRef key="linking" include="seg ab"/>
@@ -577,7 +586,7 @@
           <elementSpec ident="name" mode="change">
             <attList>
               <attDef ident="type" mode="change">
-                <valList type="closed" mode="change">
+                <valList type="semi" mode="change">
                   <valItem mode="add" ident="nisbaŧs">
                     <desc versionDate="2019-09-07" xml:lang="en">A descriptive name "nisbaŧs".
                       Equivalent to mARkdown's <code>$DIC_NIS$</code>.</desc>
@@ -664,7 +673,7 @@
           <classSpec ident="att.global.source" type="atts" mode="delete"/>
           <elementSpec ident="date" mode="change">
             <attList>
-              <attDef ident="calendar" mode="change" usage="req">
+              <attDef ident="calendar" mode="change" usage="opt">
                 <valList type="closed" mode="change">
                   <valItem mode="add" ident="#ah">
                     <desc versionDate="2019-09-10" xml:lang="en">Anno Hegirae, "in the year of the
@@ -672,7 +681,7 @@
                   </valItem>
                 </valList>
               </attDef>
-              <attDef ident="when-custom" mode="change" usage="req">
+              <attDef ident="when-custom" mode="change" usage="opt">
                 <datatype>
                   <dataRef key="teidata.count"/>
                 </datatype>
@@ -760,7 +769,6 @@
             </classes>
           </classSpec>
           <classRef key="att.global.analytic"/>
-          <classSpec ident="att.datable.w3c" type="atts" mode="delete"/>
           <classSpec ident="att.dimensions" type="atts" mode="delete"/>
           <classSpec ident="att.editLike" type="atts" mode="delete"/>
           <elementSpec ident="category" mode="change">
